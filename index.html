@@ -1,43 +1,361 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>My Games</title>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background: #111;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0d0d0f;
             color: white;
-            font-family: Arial;
+        }
+
+        /* Header */
+        header {
+            padding: 35px 20px 25px;
             text-align: center;
+            background: linear-gradient(180deg, #17171b, #0d0d0f);
         }
 
-        h1 {
-            margin-top: 50px;
+        header h1 {
+            margin: 0;
+            font-size: 42px;
         }
 
-        .game {
-            display: inline-block;
-            background: #222;
-            padding: 25px;
-            margin: 10px;
-            border-radius: 15px;
+        header p {
+            color: #aaa;
+            margin-top: 10px;
         }
 
-        a {
+        /* Search */
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        #search {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 14px;
+            background: #202024;
+            color: white;
+            font-size: 17px;
+            outline: none;
+        }
+
+        #search:focus {
+            box-shadow: 0 0 0 2px #5865f2;
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 20px 25px;
+        }
+
+        .category {
+            border: none;
+            padding: 10px 18px;
+            border-radius: 20px;
+            background: #202024;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .category:hover,
+        .category.active {
+            background: #5865f2;
+        }
+
+        /* Games */
+        .games {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            background: #19191d;
+            border-radius: 18px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #29292e;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .game-image {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+            background: linear-gradient(135deg, #252530, #15151a);
+        }
+
+        .game-info {
+            padding: 17px;
+        }
+
+        .game-info h2 {
+            margin: 0 0 7px;
+            font-size: 20px;
+        }
+
+        .game-info p {
+            color: #999;
+            font-size: 14px;
+            margin: 0 0 15px;
+        }
+
+        .play-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            background: #5865f2;
             color: white;
             text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .play-button:hover {
+            background: #4752c4;
+        }
+
+        /* No results */
+        #no-results {
+            display: none;
+            text-align: center;
+            color: #888;
+            padding: 50px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+        }
+
+        /* Phone */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 32px;
+            }
+
+            .games {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
+
+<header>
     <h1>🎮 My Games</h1>
+    <p>Play browser games anytime</p>
+</header>
 
-    <div class="game">
-        <a href="#">Game 1</a>
+<div class="search-container">
+    <input
+        type="text"
+        id="search"
+        placeholder="🔎 Search games..."
+        onkeyup="searchGames()"
+    >
+</div>
+
+<div class="categories">
+    <button class="category active" onclick="filterGames('all', this)">
+        All
+    </button>
+
+    <button class="category" onclick="filterGames('action', this)">
+        ⚔️ Action
+    </button>
+
+    <button class="category" onclick="filterGames('arcade', this)">
+        🕹️ Arcade
+    </button>
+
+    <button class="category" onclick="filterGames('sports', this)">
+        ⚾ Sports
+    </button>
+
+    <button class="category" onclick="filterGames('puzzle', this)">
+        🧩 Puzzle
+    </button>
+</div>
+
+<div class="games" id="games">
+
+    <!-- GAME 1 -->
+    <div class="game-card" data-category="arcade" data-name="Game 1">
+        <div class="game-image">
+            🕹️
+        </div>
+
+        <div class="game-info">
+            <h2>Game 1</h2>
+            <p>Arcade game</p>
+
+            <a class="play-button" href="games/game1.html">
+                ▶ Play
+            </a>
+        </div>
     </div>
 
-    <div class="game">
-        <a href="#">Game 2</a>
+
+    <!-- GAME 2 -->
+    <div class="game-card" data-category="action" data-name="Game 2">
+        <div class="game-image">
+            ⚔️
+        </div>
+
+        <div class="game-info">
+            <h2>Game 2</h2>
+            <p>Action game</p>
+
+            <a class="play-button" href="games/game2.html">
+                ▶ Play
+            </a>
+        </div>
     </div>
+
+
+    <!-- GAME 3 -->
+    <div class="game-card" data-category="sports" data-name="Baseball">
+        <div class="game-image">
+            ⚾
+        </div>
+
+        <div class="game-info">
+            <h2>Baseball</h2>
+            <p>Sports game</p>
+
+            <a class="play-button" href="games/baseball.html">
+                ▶ Play
+            </a>
+        </div>
+    </div>
+
+
+    <!-- GAME 4 -->
+    <div class="game-card" data-category="puzzle" data-name="Puzzle">
+        <div class="game-image">
+            🧩
+        </div>
+
+        <div class="game-info">
+            <h2>Puzzle</h2>
+            <p>Challenge your brain</p>
+
+            <a class="play-button" href="games/puzzle.html">
+                ▶ Play
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div id="no-results">
+    <h2>No games found 😕</h2>
+    <p>Try searching for another game.</p>
+</div>
+
+<footer>
+    🎮 My Games
+</footer>
+
+
+<script>
+
+    function searchGames() {
+
+        const search =
+            document.getElementById("search")
+            .value
+            .toLowerCase();
+
+        const cards =
+            document.querySelectorAll(".game-card");
+
+        let found = 0;
+
+        cards.forEach(card => {
+
+            const name =
+                card.dataset.name.toLowerCase();
+
+            if (name.includes(search)) {
+                card.style.display = "block";
+                found++;
+            } else {
+                card.style.display = "none";
+            }
+
+        });
+
+        document.getElementById("no-results").style.display =
+            found === 0 ? "block" : "none";
+    }
+
+
+    function filterGames(category, button) {
+
+        document
+            .querySelectorAll(".category")
+            .forEach(btn => btn.classList.remove("active"));
+
+        button.classList.add("active");
+
+        const cards =
+            document.querySelectorAll(".game-card");
+
+        let found = 0;
+
+        cards.forEach(card => {
+
+            if (
+                category === "all" ||
+                card.dataset.category === category
+            ) {
+                card.style.display = "block";
+                found++;
+            } else {
+                card.style.display = "none";
+            }
+
+        });
+
+        document.getElementById("no-results").style.display =
+            found === 0 ? "block" : "none";
+    }
+
+</script>
+
 </body>
 </html>
